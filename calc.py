@@ -20,7 +20,7 @@ class ParseContract (Aspect):
         exp = cd.args[0]
 
         assert type (exp) is str, "Not an str type in 'parse'"
-        assert match ("([*/+-]* \d+)+", exp), "Wrong syntax"
+        assert match ("[-*/+0-9 ]+\d$", exp), "Wrong syntax"
 
 @ParseContract()
 def parse (exp):
@@ -71,7 +71,7 @@ tree = list (reversed ([ # 5-((1+2)-1)*(1+3.2)
                         Number      ("5"), 
                         Operation   ("-")]))
 
-st = "- + 1 2 4 d"
+st = "- + 1 2 4"
 exp = "(1+2)*(3+1)-2"
 print calculate (parse (st))
 

@@ -1,3 +1,4 @@
+from Aspyct import Aspect
 from operator import add, div, mul, sub #, pow
 
 operations = {"(": {"priority": 0, "f": None}, 
@@ -8,14 +9,38 @@ operations = {"(": {"priority": 0, "f": None},
               "/": {"priority": 3, "f": div}}
 #                ,"**": {"priority": 4, "f": None} 4}
 
+class AbstractTreeAddContract (Aspect):
+
+    def atCall (self, cd):
+
+        self.old_length = len (cd.self.tree)
+
+    def atReturn (self, cd):
+
+        assert len (cd.self.tree) == self.old_length + 1, "Not working method 'add' in 'AbstractTree'"
+
+class AbstractTreePopContract (Aspect):
+
+    def atCall (self, cd):
+
+        self.old_length = len (cd.self.tree)
+
+    def atReturn (self, cd):
+
+        assert len (cd.self.tree) == self.old_length - 1, "Not working method 'pop' in 'AbstractTree'"
+
 class AbstractTree (object):
 
     def __init__ (self):
 
         self.tree = []
 
+    @AbstractTreeAddContract()
     def add (self, value): self.tree.append (value)
+
+    @AbstractTreePopContract()
     def pop (self): return self.tree.pop ()
+
     def __len__ (self): return len (self.tree)
 
 class Number (object):
